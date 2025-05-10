@@ -1,0 +1,13 @@
+# Default.
+*           text=auto eol=lf
+
+# Normalize to LF.
+*.md        text eol=lf
+*.sh        text eol=lf
+*.yml       text eol=lf
+CODEOWNERS  text eol=lf
+LICENSE     text eol=lf
+NOTICE      text eol=lf
+
+# Binary files.
+*.png       binary

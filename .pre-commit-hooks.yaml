@@ -1,0 +1,421 @@
+# Copyright (c) Ryan Johnson
+# SPDX-License-Identifier: MIT
+#
+# Reference: https://pre-commit.com
+#
+# Hooks are grouped to mirror README.md ("## Hooks"). Within each section, hooks are sorted
+# alphabetically by `id`. Keep new entries in the same section and sort order.
+
+# ------------------------------------------------------------------------------
+# Go
+# ------------------------------------------------------------------------------
+
+- id: go-build
+  name: go build
+  description: Run 'go build' to check for build errors.
+  entry: hooks/go-build.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+
+- id: go-mod-tidy
+  name: go mod tidy
+  description: Run 'go mod tidy' to ensure Go modules are tidy.
+  entry: hooks/go-mod-tidy.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+
+- id: go-vet
+  name: go vet
+  description: Run 'go vet ./...' from each affected Go module root.
+  entry: hooks/go-vet.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+
+- id: gofmt
+  name: gofmt
+  description: Run 'gofmt' to format Go code.
+  entry: hooks/gofmt.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+
+- id: goimports
+  name: goimports
+  description: Run 'goimports' to format Go code and add/remove imports.
+  entry: hooks/goimports.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+
+- id: golangci-lint
+  name: golangci-lint
+  description: Run 'golangci-lint' to lint Go code.
+  entry: hooks/golangci-lint.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+  require_serial: true
+
+- id: govulncheck
+  name: govulncheck
+  description: Run 'govulncheck ./...' from each affected Go module root (Go vulnerability scanning).
+  entry: hooks/govulncheck.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+  require_serial: true
+
+- id: staticcheck
+  name: staticcheck
+  description: Run 'staticcheck ./...' from each affected Go module root.
+  entry: hooks/staticcheck.sh
+  language: script
+  files: \.go$
+  exclude: vendor\/.*$
+  require_serial: true
+
+# ------------------------------------------------------------------------------
+# TypeScript / JavaScript
+# ------------------------------------------------------------------------------
+
+- id: eslint
+  name: eslint
+  description: Run 'npx eslint --max-warnings=0 --fix' on JavaScript and TypeScript files.
+  entry: hooks/eslint.sh
+  language: script
+  files: \.(ts|tsx|js|jsx|mjs|cjs|mts|cts)$
+  exclude: >
+    (?x)^(
+      node_modules\/.*$|
+      dist\/.*$|
+      coverage\/.*$|
+      \.next\/.*$|
+      build\/.*$
+    )$
+
+- id: jest-related
+  name: jest (findRelatedTests)
+  description: Run 'npx jest --findRelatedTests --passWithNoTests --runInBand' for staged JS/TS (expects Jest in node_modules).
+  entry: hooks/jest-related.sh
+  language: script
+  files: \.(ts|tsx|js|jsx|mjs|cjs)$
+  exclude: >
+    (?x)^(
+      node_modules\/.*$|
+      dist\/.*$|
+      coverage\/.*$|
+      \.next\/.*$|
+      build\/.*$
+    )$
+
+- id: prettier
+  name: prettier
+  description: Run 'npx prettier --write' on common front-end and config file types.
+  entry: hooks/prettier.sh
+  language: script
+  files: \.(ts|tsx|js|jsx|mjs|cjs|mts|cts|json|css|scss|less|html|md|yaml|yml|vue|svelte|graphql|gql)$
+  exclude: >
+    (?x)^(
+      node_modules\/.*$|
+      dist\/.*$|
+      coverage\/.*$|
+      package-lock\.json$|
+      npm-shrinkwrap\.json$|
+      \.next\/.*$|
+      build\/.*$
+    )$
+
+- id: prettier-check
+  name: prettier (check)
+  description: Run 'npx prettier --check' (no writes) on the same file types as prettier.
+  entry: hooks/prettier-check.sh
+  language: script
+  files: \.(ts|tsx|js|jsx|mjs|cjs|mts|cts|json|css|scss|less|html|md|yaml|yml|vue|svelte|graphql|gql)$
+  exclude: >
+    (?x)^(
+      node_modules\/.*$|
+      dist\/.*$|
+      coverage\/.*$|
+      package-lock\.json$|
+      npm-shrinkwrap\.json$|
+      \.next\/.*$|
+      build\/.*$
+    )$
+
+- id: tsc-noemit
+  name: tsc (noEmit)
+  description: Run 'npx tsc --noEmit' when TypeScript sources or tsconfig change (expects tsconfig.json at repo root).
+  entry: hooks/tsc-noemit.sh
+  language: script
+  pass_filenames: false
+  files: (^|/)tsconfig.*\.json$|\.(ts|tsx)$
+  exclude: >
+    (?x)^(
+      node_modules\/.*$|
+      dist\/.*$|
+      coverage\/.*$
+    )$
+
+# ------------------------------------------------------------------------------
+# Python
+# ------------------------------------------------------------------------------
+
+- id: mypy
+  name: mypy
+  description: Run 'mypy' for static type checking of Python code.
+  entry: hooks/mypy.sh
+  language: script
+  files: \.py$
+  exclude: >
+    (?x)^(
+      \.tox\/.*$|
+      __pycache__\/.*$
+    )$
+
+- id: ruff-check
+  name: ruff check
+  description: Run 'ruff check --fix' to lint and autofix Python code.
+  entry: hooks/ruff-check.sh
+  language: script
+  files: \.py$
+  exclude: >
+    (?x)^(
+      \.tox\/.*$|
+      __pycache__\/.*$
+    )$
+
+- id: ruff-format
+  name: ruff format
+  description: Run 'ruff format' to format Python code.
+  entry: hooks/ruff-format.sh
+  language: script
+  files: \.py$
+  exclude: >
+    (?x)^(
+      \.tox\/.*$|
+      __pycache__\/.*$
+    )$
+
+- id: yapf
+  name: yapf
+  description: Run 'yapf' to format Python code.
+  entry: hooks/yapf.sh
+  language: script
+  files: \.py$
+  exclude: >
+    (?x)^(
+      \.tox\/.*$|
+      __pycache__\/.*$
+    )$
+
+# ------------------------------------------------------------------------------
+# Ansible
+# ------------------------------------------------------------------------------
+
+- id: ansible-lint
+  name: ansible-lint
+  description: Run 'ansible-lint' on staged YAML for playbooks, roles, inventories, and related Ansible content.
+  entry: hooks/ansible-lint.sh
+  language: script
+  files: \.(ya?ml|ansible)$
+  exclude: >
+    (?x)^(
+      \.github/workflows/.*|
+      \.tox/.*|
+      node_modules/.*|
+      (\.venv|venv)/.*|
+      \.ansible/collections/.*|
+      \.cache/ansible-lint/.*
+    )$
+  require_serial: true
+
+# ------------------------------------------------------------------------------
+# Terraform / OpenTofu / Terragrunt
+# ------------------------------------------------------------------------------
+
+- id: terraform-fmt
+  name: terraform fmt
+  description: Runs 'terraform fmt' to format Terraform configuration files.
+  entry: hooks/terraform-fmt.sh
+  language: script
+  files: \.tf$
+  exclude: \.terraform\/.*$
+  require_serial: true
+
+- id: terraform-validate
+  name: terraform validate
+  description: Runs 'terraform validate' to validate Terraform configuration files.
+  entry: hooks/terraform-validate.sh
+  language: script
+  files: \.tf$
+  exclude: \.terraform\/.*$
+  require_serial: true
+
+- id: terrafmt-check
+  name: terrafmt diff (check)
+  description: Run 'terrafmt diff --check --quiet' (no writes); same file types as terrafmt-fmt.
+  entry: hooks/terrafmt-check.sh
+  language: script
+  files: \.(md|markdown|go)$
+  exclude: >
+    (?x)^(
+      vendor\/.*|
+      \.terraform\/.*|
+      node_modules\/.*|
+      \.terragrunt-cache\/.*|
+      \.tox\/.*$
+    )$
+  require_serial: true
+
+- id: terrafmt-fmt
+  name: terrafmt fmt
+  description: Run 'terrafmt fmt' on Markdown or Go files with embedded Terraform/HCL (uses --fmtcompat for *.go).
+  entry: hooks/terrafmt-fmt.sh
+  language: script
+  files: \.(md|markdown|go)$
+  exclude: >
+    (?x)^(
+      vendor\/.*|
+      \.terraform\/.*|
+      node_modules\/.*|
+      \.terragrunt-cache\/.*|
+      \.tox\/.*$
+    )$
+  require_serial: true
+
+- id: terragrunt-hclfmt
+  name: terragrunt hclfmt
+  description: Runs 'terragrunt hclfmt' to format Terragrunt configuration files.
+  entry: hooks/terragrunt-hclfmt.sh
+  language: script
+  files: \.hcl$
+  exclude: >
+    (?x)^(
+      \.terraform\/.*|
+      \.terragrunt-cache\/.*|
+    )$
+
+- id: tflint
+  name: tflint
+  description: Run 'tflint' to lint Terraform configuration files.
+  entry: hooks/tflint.sh
+  language: script
+  files: \.tf$
+  exclude: \.terraform\/.*$
+  require_serial: true
+
+- id: tofu-fmt
+  name: tofu fmt
+  description: Runs 'tofu fmt' to format OpenTofu configuration files.
+  entry: hooks/tofu-fmt.sh
+  language: script
+  files: \.(tf|tofu)$
+  exclude: \.terraform\/.*$
+  require_serial: true
+
+- id: tofu-validate
+  name: tofu validate
+  description: Runs 'tofu validate' to validate OpenTofu configuration files.
+  entry: hooks/tofu-validate.sh
+  language: script
+  files: \.(tf|tofu)$
+  exclude: \.terraform\/.*$
+  require_serial: true
+
+# ------------------------------------------------------------------------------
+# Packer
+# ------------------------------------------------------------------------------
+
+- id: packer-fmt
+  name: packer fmt
+  description: Runs 'packer fmt' to format Packer configuration files.
+  entry: hooks/packer-fmt.sh
+  language: script
+  files: (\.pkr\.(hcl|json)|\.pkrvars\.hcl)$
+  require_serial: true
+
+- id: packer-validate
+  name: packer validate
+  description: Runs 'packer validate' to validate Packer configuration files.
+  entry: hooks/packer-validate.sh
+  language: script
+  files: (\.pkr\.(hcl|json)|\.pkrvars\.hcl)$
+  require_serial: true
+
+# ------------------------------------------------------------------------------
+# PowerShell
+# ------------------------------------------------------------------------------
+
+- id: psscriptanalyzer
+  name: PSScriptAnalyzer
+  description: Run PSScriptAnalyzer via PowerShell 7+ on PowerShell scripts.
+  entry: hooks/psscriptanalyzer.sh
+  language: script
+  files: \.ps1$
+
+# ------------------------------------------------------------------------------
+# Docker
+# ------------------------------------------------------------------------------
+
+- id: hadolint
+  name: hadolint
+  description: Run 'hadolint' to lint Dockerfiles.
+  entry: hooks/hadolint.sh
+  language: script
+  files: (^|/)(Dockerfile|Dockerfile(\..+)?|.*\.dockerfile)$
+
+# ------------------------------------------------------------------------------
+# YAML
+# ------------------------------------------------------------------------------
+
+- id: yamllint
+  name: yamllint
+  description: Run 'yamllint' on YAML files (excluding GitHub Actions workflows).
+  entry: hooks/yamllint.sh
+  language: script
+  files: \.(yaml|yml)$
+  exclude: ^\.github/workflows/
+
+# ------------------------------------------------------------------------------
+# GitHub Actions
+# ------------------------------------------------------------------------------
+
+- id: actionlint
+  name: actionlint
+  description: Run 'actionlint' on GitHub Actions workflow files.
+  entry: hooks/actionlint.sh
+  language: script
+  files: ^\.github/workflows/.*\.(yml|yaml)$
+
+# ------------------------------------------------------------------------------
+# Markdown
+# ------------------------------------------------------------------------------
+
+- id: markdown-link-check
+  name: markdown-link-check
+  description: Run 'markdown-link-check' to check for broken links in markdown files.
+  entry: hooks/markdown-link-check.sh
+  language: script
+  files: \.md$
+  exclude: vendor\/.*$
+
+- id: markdownlint-cli2
+  name: markdownlint-cli2
+  description: Run 'npx markdownlint-cli2 --fix' on Markdown files (configure with .markdownlint-cli2.jsonc).
+  entry: hooks/markdownlint-cli2.sh
+  language: script
+  files: \.md$
+  exclude: vendor\/.*$
+
+# ------------------------------------------------------------------------------
+# Shell
+# ------------------------------------------------------------------------------
+
+- id: shellcheck
+  name: shellcheck
+  description: Run 'shellcheck' to lint shell scripts.
+  entry: hooks/shellcheck.sh
+  language: script
